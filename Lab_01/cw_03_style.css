@@ -1,0 +1,36 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: darkgray;
+}
+
+body{
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.kwadrat{
+    background-color: red;
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+    margin: 10px;
+    position:relative;  
+}
+
+.first, .second{
+    display: flex;
+    justify-content: center;
+}
+
+#zdjecie{
+    background-image: url("cw_01.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
