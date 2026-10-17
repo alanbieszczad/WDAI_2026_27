@@ -18,14 +18,11 @@ body{
     background-color: red;
     width: 100px;
     height: 100px;
-    padding: 10px;
     margin: 10px;
-    position:relative;  
 }
 
 .first, .second{
     display: flex;
-    justify-content: center;
 }
 
 #zdjecie{

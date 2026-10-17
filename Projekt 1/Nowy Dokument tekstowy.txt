@@ -1,0 +1,29 @@
+Pomysł na strone:
+Jedna, główna strona z animacjami scrollowania, te takie zbliżenia, przechodzenie nizej itp. 
+
+Nagłówek:
+      BMW
+Historia serii 5
+
+Zdjęcia aut raz z jednej, raz z drugiej strony, na przeciw  - opisy modelów, sprobowac dodac dźwięk silnika do klikniecia
+
+
+Na dole:
+Zapis do newslettera, ankieta osobowa do sprawdzenia, jaki model najbardziej do ciebie pasuje
+Footer:
+Alan Bieszczad 2026
+
+E12 (1972 - 1981)
+Pierwszy model bmw serii 5, który zapoczątkował nowoczesną numeryczną nomenklaturę bawarskiej marki. Czterodrzwiowy sedan z napędem na tylną oś, zaprojektowany przez Paula Bracq'a. Wyprodukowano ok. 700 000 egzemplarzy. E12 posiadało silniki benzynowe zarówno 4-cylindrowe (518,520,520i) o pojemności 1.8-2.0L, jak i 6-cylindrowe rzędowe (M30: 525, 528, 530i, 535i) o pojemności 2.5L-3.5L. Istnieje także sportowa odmiana M535i, wyposażona w silnik 3.5L o mocy 210KM. Cztero- i pięciobiegowe skrzynie manualne oraz 3-biegowe automatyczne. Był to jeden z pierwszych modeli aut, do którego produkcji wykorzystano komputery - do np. obliczenia i zaprojektowania kontrolowanych stref zgniotu z przodu i tyłu nadwozia
+
+E28 (1980 - 1988)
+Następca modelu E12, druga generacja niemieckiej limuzyny. Jak u poprzednika - czterodrzwiowy sedan o niesamowitej wygodzie jazdy. Wyprodukowano ok. 720 000 egzemplarzy. E28 wprowadziło do serii 5 silniki dieslowe (R6) - wolnossący 524d oraz turbodoładowany 524td. Silniki benzynowe (R4 / R6) - M10 (518i), M20 (520i, 525e, 528e), M30 (525i, 528i, 533i, 535i, M535i). Dodatkowo był to pierwszy model serii 5, który doczekał się wydania w wersji M, posiadającym sportowy silnik S38 - rzędowy, 6-cylindrowy, o pojemności 3.5L z generowaną mocą 286KM. Pomimo upływu lat, BMW skupiło się w tym modelu na mechanice, zawieszenie i odchudzenie konstrukcji, przez co E28 łudząco przypomina swojego poprzednika.
+
+E34 (1987 - 1996)
+Trzeci model serii 5, pierwszy model tej serii, który otrzymał wersję kombi (Touring). Wyprodukowano ok. 1.3 miliona egzemplarzy. Silniki benzynowe (R4 / R6/ V8 - po raz pierwszy w tej serii) - M40/M43 (518i), M20/M50 (520i, 525i), M30 (530i, 535i), M60 - V8 (530i V8, 540i V8) oraz sportowe S38 w modelu M o pojemnościach 3.6, 3.8L oraz diesle - M21 (524td), M51 (wolnossący 525td oraz turbodoładowany 525tds z intercoolerem). Pięcio- i sześciobiegowe manualne skrzynie biegów oraz cztero- i pięciobiegowe automatyczne. Wprowadzono poduszki powietrzne oraz system ABS w celu zwiększenia bezpieczeństwa podróżującym. W tym modelu ewoluowały "nerki", które były szersze od poprzedników i stały się znakiem rozpoznawczym późniejszych roczników. Firma Alpina zmodyfikowała E34, bazując na modelu 535i (Alpina B10 BiTurbo), dysponująca mocą aż 360KM i osiągająca prędkość maksymalną ok. 291km/h, co w tamtych czasach czyniło ją jednym z najszybszych sedanów świata.
+
+E39 (1995 - 2003)
+E60/E61 (2003 - 2010)
+F10/F11 (2010 - 2017)
+G30/G31 (2017 - 2024)
+G60/G61 (2023 - )
