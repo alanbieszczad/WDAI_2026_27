@@ -1,0 +1,297 @@
+html, body{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #343434;
+    font-family: 'Montserrat', sans-serif;
+    color: #DFDFDF;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main{
+    flex: 1;
+}
+
+.navbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0e34a0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+    padding: 0 1rem;
+}
+
+.nav-links{
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav_element{
+    margin: 10px;
+}
+
+.nav_element a{
+    color: #DFDFDF;
+    text-decoration: none;
+}
+
+.nav_element a:hover{
+    color: #66b2ff;
+}
+
+
+.survey{
+    margin: 50px;
+    padding: 1rem;
+    background-color: #272727;
+    border: 2px solid #272727;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.survey h3{
+    margin-top: .5rem;
+}
+
+.survey textarea{
+    font-family: "Montserrat", sans-serif;
+    background-color: #202020;
+    border: 2px solid #202020;
+    color: #ffffff;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    height: 2rem;
+    width: 20rem;
+    resize: none;
+}
+
+.suggestions-box {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #222;
+    border: 1px solid #555;
+    border-radius: 4px;
+    z-index: 100;
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.suggestion-item {
+    padding: 10px 15px;
+    color: #DFDFDF;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #333;
+    transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+    background-color: #0e34a0;
+    color: #fff;
+}
+
+.survey-options{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.pill-checkbox{
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+
+.pill-checkbox input[type="checkbox"]{
+    display: none;
+}
+
+.pill-checkbox span{
+    background-color: #202020;
+    color: #DFDFDF;
+    border: 2px solid #202020;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.pill-checkbox:hover{
+    border-color: #66b2ff;
+}
+
+.pill-checkbox input[type="checkbox"]:checked + span{
+    background-color: #0e34a0;
+    border-color: #66b2ff;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(14,52,160,0.5);
+}
+
+.form-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.form-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #202020;
+    border: 2px solid #202020;
+    border-radius: 50px;
+    height: 40px;
+    width: 120px;
+    color: #DFDFDF;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+
+.submit-btn {
+    background-color: #0e34a0;
+    color: #DFDFDF;
+}
+
+.submit-btn:hover {
+    background-color: #66b2ff;
+    color: #111;
+}
+
+/* Przycisk WYCZYŚĆ (Styl stonowany, ciemny/szary) */
+.clear-btn {
+    background-color: #444;
+    color: #DFDFDF;
+    border: 2px solid #555;
+}
+
+.clear-btn:hover {
+    background-color: #555;
+    border-color: #777;
+}
+
+/* Efekt po kliknięciu (lekkie wciśnięcie) */
+.form-btn:active {
+    transform: scale(0.97);
+}
+
+.cookie-banner{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #1a1a1a;
+    color: #DFDFDF;
+    padding: 2.2rem 2rem;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    border-top: 2px solid #0e34a0;
+    font-family: "Montserrat", sans-serif;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.cookie-banner.show{
+    transform: translateY(0);
+}
+
+.cookie-banner p{
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.cookie-buttons{
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.cookie-btn{
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    transition: background-color 0.2s;
+}
+
+.cookie-btn.accept{
+    background-color: #0e34a0;
+    color: #DFDFDF;
+}
+
+.cookie-btn.accept:hover{
+    background-color:#66b2ff;
+}
+
+.cookie-btn.reject{
+    background-color: #444;
+    color: #DFDFDF;
+}
+
+.cookie-btn.reject:hover{
+    background-color: #555;
+}
+
+@media(max-width: 768px){
+    .cookie-banner{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .cookie-buttons{
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+.footer{
+    color: #DFDFDF;
+    display: flex;
+    background-color: #0e34a0;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-shrink: 0;
+}

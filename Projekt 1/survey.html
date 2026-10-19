@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="Author" content="Alan Bieszczad">
+        <meta name="Description" content="Complete a survey to know which bmw series 5 fits you best">
+        <Title>BMW Series 5 Survey</Title>
+        <link rel="stylesheet" href="./style3.css">
+        
+        <link rel="icon" type="image/x-icon" href="photos/logo_bmw.png"
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <script src="script.js"></script>
+        <script src="script3.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="page_title">BMW Series 5</div>
+                <ul class="nav-links">
+                    <li class="nav_element"><a href="index.html">Home</a></li>
+                    <li class="nav_element"><a href="gallery.html">Gallery</a></li>
+                    <li class="nav_element"><a href="survey.html">Survey</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section class="survey">
+                <h1>Ankieta</h1>
+                <h3>Uzupełnij, by dowiedzieć się, jaki model BMW serii 5 najbardziej do Ciebie pasuje (wyślemy Ci wynik w mailu)</h3>
+                <div class="form-text">
+                    <textarea class="text-area" id="first-name" placeholder="Imię"></textarea>
+                    <textarea class="text-area" id="surname" placeholder="Nazwisko"></textarea>
+                    <textarea class="text-area" id="email" placeholder="Adres e-mail"></textarea>
+                    <textarea class="text-area" id="prev-car" placeholder="Poprzednie auto"></textarea>
+                </div>
+                <p>Zaznacz, jaki typ samochodu Cię interesuje:</p>
+                <div class="survey-options">
+                    <label class="pill-checkbox">
+                        <input type="checkbox" id="type1" name="type1" value="sportowe">
+                        <span>Sportowe</span>
+                    </label>
+                    <label class="pill-checkbox">
+                        <input type="checkbox" id="type2" name="type2" value="limuzynowe">
+                        <span>Limuzynowe</span>
+                    </label>
+                    <label class="pill-checkbox">
+                        <input type="checkbox" id="type3" name="type3" value="starsze">
+                        <span>Starsze (1972 - 2005)</span>
+                    </label>
+                    <label class="pill-checkbox">
+                        <input type="checkbox" id="type4" name="type4" value="nowsze">
+                        <span>Nowsze (2005 - )</span>
+                    </label>
+                    <label class="pill-checkbox">
+                        <input type="checkbox" id="type5" name="type5" value="tańsze">
+                        <span>Tańsze (0 - 25 000zł)</span>
+                    </label>
+                    <label class="pill-checkbox">
+                        <input type="checkbox" id="type6" name="type6" value="droższe">
+                        <span>Droższe (25000zł - )</span>
+                    </label>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="send-btn" class="form-btn submit-btn">Send</button>
+                    <button type="button" id="clear-btn"class="form-btn clear-btn">Clear</button>
+                </div>
+            </section>
+            <aside id="cookie-banner" class="cookie-banner">
+                <p>Ta strona używa ciasteczek (cookies), aby zapewnić Ci lepsze doświadczenie. Korzystając z niej, wyrażasz na to zgodę.</p>
+                <div class="cookie-buttons">
+                    <button id="accept-cookies" class="cookie-btn accept">Akceptuję</button>
+                    <button id="reject-cookies" class="cookie-btn reject">Odrzuć</button>
+                </div>
+            </aside>
+        </main>
+        <footer>
+            <div class="footer">
+                <h3>Alan Bieszczad 2026</h3>
+            </div>
+        </footer>
+    </body>
+</html>
