@@ -32,6 +32,12 @@ body{
     padding: 0 1rem;
 }
 
+.page_title{
+    margin: 10px 0;
+    color: #DFDFDF;
+    font-weight: 700;
+}
+
 .nav-links{
     display: flex;
     flex-direction: row;
@@ -96,6 +102,15 @@ body h1{
 }
 
 .car-photos img{
+    display: flex;
+    height: 15rem;
+    width: 15rem;
+    margin: .5%;
+    padding:.5%;
+    cursor: pointer;
+}
+
+.car-photos video{
     display: flex;
     height: 15rem;
     width: 15rem;
