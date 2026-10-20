@@ -1,42 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const checkbox1 = document.getElementById("type3");
-    const checkbox2 = document.getElementById("type4");
-    const checkbox3 = document.getElementById("type5");
-    const checkbox4 = document.getElementById("type6");
-
-    // Gdy zaznaczysz pierwszy checkbox, odznacz drugi
-    checkbox1.addEventListener("change", function() {
-        if (checkbox1.checked) {
-            checkbox2.checked = false;
-        }
-    });
-
-    // Gdy zaznaczysz drugi checkbox, odznacz pierwszy
-    checkbox2.addEventListener("change", function() {
-        if (checkbox2.checked) {
-            checkbox1.checked = false;
-        }
-    });
-
-    checkbox3.addEventListener("change", function() {
-        if(checkbox3.checked){
-            checkbox4.checked=false;
-        }
-    });
-
-    checkbox4.addEventListener("change", function() {
-        if (checkbox4.checked){
-            checkbox3.checked=false;
-        }
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
     const sendBtn = document.getElementById("send-btn");
     const clearBtn = document.getElementById("clear-btn");
+    const subject = document.getElementById("subject");
 
     const textareas = document.querySelectorAll(".text-area");
-    const prevCarInput = document.getElementById("prev-car")
     const STORAGE_KEY = "bmw_survey_history";
 
     if(!sendBtn) return;
@@ -48,6 +15,11 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
             cb.checked = false;
         });
+
+        if(subject){
+            subject.value="";
+            subject.classList.add("placeholder-active");
+        }
         hideAllSuggestions();
     }
 
@@ -59,43 +31,54 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Obsługa przycisku Send (Zapisuje DO PAMIĘCI TYLKO TEXTAREA, pomija checkboxy)
+    // Obsługa przycisku Send
     sendBtn.addEventListener("click", function() {
-        let hasValue = false;
+        let allFilled = true;
 
         textareas.forEach(textarea => {
-            const val = textarea.value.trim();
-            const fieldId = textarea.id; // np. "first-name", "prev-car"
+            if(textarea.value.trim()==="") {
+                allFilled=false;
+            }
+        });
 
-            if (val !== "") {
-                hasValue = true;
+        const isSubjectSelected=subject && subject.value!=="";
+
+        if (allFilled && isSubjectSelected) {
+            textareas.forEach(textarea => {
+                const fieldId=textarea.id;
                 const storageKey = "bmw_survey_" + fieldId;
+                const val = textarea.value.trim();
                 let history = JSON.parse(localStorage.getItem(storageKey)) || [];
 
                 if (!history.includes(val)) {
                     history.push(val);
                     localStorage.setItem(storageKey, JSON.stringify(history));
                 }
-            }
-        });
-
-        if (hasValue) {
+            });
             alert("Formularz został wysłany i dane tekstowe zapisane!");
             clearForm();
-        } else {
-            alert("Wypełnij przynajmniej jedno pole tekstowe!");
+        }
+        else{
+            alert("Wypełnij cały formularz!");
         }
     });
 
     // --- SYSTEM PODPOWIEDZI DLA KAŻDEGO POLA TEXTAREA OSOBNO ---
     textareas.forEach(textarea => {
+        if(textarea.id === "message") return;
         const fieldId = textarea.id;
         const STORAGE_KEY = "bmw_survey_" + fieldId;
 
+        // Tworzymy kontener (wrapper) wokół textarea, aby podpowiedzi pozycjonowały się idealnie pod nim
+        const wrapper = document.createElement("div");
+        wrapper.className = "input-wrapper";
+        
+        textarea.parentNode.insertBefore(wrapper, textarea);
+        wrapper.appendChild(textarea);
+
         const suggestionsBox = document.createElement("div");
         suggestionsBox.className = "suggestions-box";
-        textarea.parentNode.style.position = "relative";
-        textarea.parentNode.appendChild(suggestionsBox);
+        wrapper.appendChild(suggestionsBox);
 
         function showSuggestions() {
             hideAllSuggestions();
@@ -137,4 +120,25 @@ document.addEventListener("DOMContentLoaded", function() {
             hideAllSuggestions();
         }
     });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const selectElement = document.querySelector(".survey select");
+    
+    if (selectElement) {
+        // Funkcja sprawdzająca czy wybrano opcję domyślną
+        function updateSelectColor() {
+            if (selectElement.value === "") {
+                selectElement.classList.add("placeholder-active");
+            } else {
+                selectElement.classList.remove("placeholder-active");
+            }
+        }
+
+        // Uruchom przy załadowaniu strony
+        updateSelectColor();
+
+        // Uruchom przy każdej zmianie wyboru
+        selectElement.addEventListener("change", updateSelectColor);
+    }
 });
