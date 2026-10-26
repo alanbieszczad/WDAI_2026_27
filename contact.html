@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="Author" content="Alan Bieszczad">
+        <meta name="Description" content="Contact site to contact the company">
+        <Title>Contact us</Title>
+        <link rel="stylesheet" href="./style3.css">
+        
+        <link rel="icon" type="image/x-icon" href="photos/logo_bmw.png"
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <script src="script.js"></script>
+        <script src="script3.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="page_title">BMW Series 5</div>
+                <ul class="nav-links">
+                    <li class="nav_element"><a href="index.html">Home</a></li>
+                    <li class="nav_element"><a href="gallery.html">Gallery</a></li>
+                    <li class="nav_element"><a href="contact.html"><b>Contact</b></a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section class="survey">
+                <h1>Skontaktuj się z nami!</h1>
+                <h3>Wypełnij formularz, a my odpowiemy w e-mailu</h3>
+                <div class="form-text">
+                    <textarea class="text-area" id="first-name" placeholder="Imię"></textarea>
+                    <textarea class="text-area" id="surname" placeholder="Nazwisko"></textarea>
+                    <textarea class="text-area" id="email" placeholder="Adres e-mail"></textarea>
+                    <select id="subject" class="select-box">
+                        <option value="" disabled selected hidden>Wybierz temat wiadomości</option>
+                        <option value="Zdjęcia">Zdjęcia</option>
+                        <option value="Praca">Praca</option>
+                        <option value="Bład">Zgłoś błąd</option>
+                    </select>
+                    <textarea class="text-area" id="message" placeholder="Twoja wiadomość"></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" id="send-btn" class="form-btn submit-btn">Send</button>
+                    <button type="button" id="clear-btn"class="form-btn clear-btn">Clear</button>
+                </div>
+            </section>
+            <aside id="cookie-banner" class="cookie-banner">
+                <p>Ta strona używa ciasteczek (cookies), aby zapewnić Ci lepsze doświadczenie. Korzystając z niej, wyrażasz na to zgodę.</p>
+                <div class="cookie-buttons">
+                    <button id="accept-cookies" class="cookie-btn accept">Akceptuję</button>
+                    <button id="reject-cookies" class="cookie-btn reject">Odrzuć</button>
+                </div>
+            </aside>
+        </main>
+        <footer>
+            <div class="footer">
+                <h3>© Alan Bieszczad 2026</h3>
+            </div>
+        </footer>
+    </body>
+</html>
