@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     localStorage.setItem(storageKey, JSON.stringify(history));
                 }
             });
-            alert("Formularz został wysłany i dane tekstowe zapisane!");
+            alert("Formularz został wysłany!");
             clearForm();
         }
         else{
