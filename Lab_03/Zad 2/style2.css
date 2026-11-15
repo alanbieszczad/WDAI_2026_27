@@ -1,0 +1,35 @@
+body{
+    height: 100vh;
+    background-color: #4be1e6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    background-color: #303030;
+    padding: 20px;
+    color: #ffffff;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.inputs{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+#genBtn{
+    margin: 15px;
+}
+
+#generatedPassword{
+    color: #ffffff;
+}
