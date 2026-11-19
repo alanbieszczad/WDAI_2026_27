@@ -1,5 +1,7 @@
 // Funkcjonalnosc gry
 
+// Responsywnosc gry
+
 const BASE_BIRD_WIDTH = 34;
 const BASE_BIRD_HEIGHT = 24;
 const BASE_PERK_SIZE = 40;
@@ -64,7 +66,7 @@ function syncLayoutOnResize() {
     }
 }
 
-// Main game function
+// Main game functions
 
 function gameLoop(timestamp){
     if(!lastTime) lastTime=timestamp;
@@ -277,19 +279,6 @@ function updatePhysics(dt){
     bird.y+=bird.vy;
 }
 
-function drawBird(ctx){
-    let birdSize=getBirdSize();
-    ctx.save();
-    ctx.translate(bird.x, bird.y);
-    ctx.rotate(bird.rotation);
-    let currentBirdImg = birdFrames[currentFrame];
-    if(currentBirdImg && currentBirdImg.complete && currentBirdImg.naturalWidth !==0){
-        ctx.drawImage(currentBirdImg, -birdSize.width / 2, -birdSize.height / 2, birdSize.width, birdSize.height);
-    }
-
-    ctx.restore();
-}
-
 function spawnPipe() {
     let groundTopY = getGroundTopY();
     let pipeG = getCurrentPipeGap();
@@ -303,16 +292,15 @@ function spawnPipe() {
     let rand=Math.random();
     let currentSum = 0;
 
-    // Sprawdzamy perki na podstawie ich dokładnych wartości 'chance' z obiektów:
-    currentSum += superScorePerk.chance; // 0.05 (5% szans)
+    currentSum += superScorePerk.chance; // (5% szans)
     if (rand < currentSum) {
         perk = { type: 'superScore', ...superScorePerk, collected: false };
     } else {
-        currentSum += noCollisionPerk.chance; // 0.05 + 0.15 = 0.20 (15% szans)
+        currentSum += noCollisionPerk.chance; // (15% szans)
         if (rand < currentSum) {
             perk = { type: 'noCollision', ...noCollisionPerk, collected: false };
         } else {
-            currentSum += fastForwardPerk.chance; // 0.20 + 0.30 = 0.50 (30% szans)
+            currentSum += fastForwardPerk.chance; // (30% szans)
             if (rand < currentSum) {
                 perk = { type: 'fastForward', ...fastForwardPerk, collected: false };
             }
@@ -369,6 +357,19 @@ function playMusic() {
     bgMusic.play().catch(error => {
         console.log("Music error");
     })
+}
+
+function drawBird(ctx){
+    let birdSize=getBirdSize();
+    ctx.save();
+    ctx.translate(bird.x, bird.y);
+    ctx.rotate(bird.rotation);
+    let currentBirdImg = birdFrames[currentFrame];
+    if(currentBirdImg && currentBirdImg.complete && currentBirdImg.naturalWidth !==0){
+        ctx.drawImage(currentBirdImg, -birdSize.width / 2, -birdSize.height / 2, birdSize.width, birdSize.height);
+    }
+
+    ctx.restore();
 }
 
 function draw(){
@@ -469,11 +470,11 @@ function updateAnimation(){
     }
 }
 
-// Wlasciwosci obiektow
+// objects' properties
 
 let lastTime = 0;
 
-// Wlasciwosci bird
+// bird's properties
 let bird= {
     x: 250,
     y: 150,
@@ -502,13 +503,13 @@ let birdFrames = [
 let currentFrame=0;
 let animCounter=0;
 
-// Wlasciwosci pipe 
+// pipe's properties 
 
 let pipes=[];
 let pipeImage = new Image();
 pipeImage.src='assets/Flappy Bird/pipe-green.png';
 
-// Wlasciwosci perkow
+// perks' properties
 
 let noCollisionPerk= {
     duration: 5,
@@ -537,7 +538,7 @@ let activePerks = {
     fastForwardTimeLeft: 0
 };
 
-// Wlasciwosci reszty
+// other properties
 
 let music = {
     die: new Audio('assets/Sound Efects/die.wav'),
@@ -554,7 +555,7 @@ for (let i =0; i<=9; i++){
     scoreNumbers.push(img);
 }
 
-// GRA
+// Gameplay
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const messageBox=document.getElementById('messages');
