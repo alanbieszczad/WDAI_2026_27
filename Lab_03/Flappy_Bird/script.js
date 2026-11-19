@@ -1,11 +1,75 @@
 // Funkcjonalnosc gry
 
+const BASE_BIRD_WIDTH = 34;
+const BASE_BIRD_HEIGHT = 24;
+const BASE_PERK_SIZE = 40;
+const BASE_PIPE_WIDTH = 150;
+const BASE_PIPE_GAP = 250;
+const BASE_GROUND_HEIGHT = 112;
+
+function getScale(){
+    if(!canvas || !canvas.height) return 1;
+    let s = canvas.height / 700;
+    return Math.max(0.65,Math.min(1.45,s));
+}
+
+function getBirdSize(){
+    let s = getScale();
+    return {
+        width: Math.round(BASE_BIRD_WIDTH*s),
+        height: Math.round(BASE_BIRD_HEIGHT*s)
+    };
+}
+
+function getPerkSize(){
+    let s = getScale();
+    return Math.round(BASE_PERK_SIZE*s);
+}
+
+function getCurrentPipeWidth() {
+    if(!canvas || !canvas.width) return BASE_PIPE_WIDTH;
+    let widthByScreen = canvas.width * 0.11;
+    return Math.max(65,Math.min(165,Math.round(widthByScreen)));
+}
+
+function getCurrentPipeGap(){
+    let s = getScale();
+    let gap = Math.round(BASE_PIPE_GAP*s);
+    if (canvas && canvas.width < 600){
+        gap=Math.round(gap*0.78);
+    }
+    return Math.max(135,gap);
+}
+
+function getGroundHeight() {
+    if(!canvas || !canvas.height) return BASE_GROUND_HEIGHT;
+    return Math.max(76,Math.min(112,Math.round(BASE_GROUND_HEIGHT * Math.min(1,canvas.height/700))));
+}
+
+function getGroundTopY() {
+    return canvas.height-getGroundHeight();
+}
+
+function syncLayoutOnResize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let targetX = Math.min(250,Math.max(60,Math.round(canvas.width*0.2)));
+    bird.x=targetX;
+
+    let groundH=getGroundHeight;
+    let birdH=getBirdSize().height;
+    if(bird.y+birdH>=canvas.height-groundH){
+        bird.y=canvas.height-groundH-birdH;
+    }
+}
 
 // Main game function
 
 function gameLoop(timestamp){
-    let dt = timestamp - lastTime;
-    lastTime = timestamp;
+    if(!lastTime) lastTime=timestamp;
+    let dt = Math.min(50,Math.max(0,timestamp-lastTime));
+    lastTime=timestamp;
 
     update(dt);
     draw();
@@ -16,16 +80,23 @@ function gameLoop(timestamp){
 function update(dt){
     let scores=getTopScores();
     let bestScore=scores[0] !== undefined ? scores[0] : 0;
+    let birdSize=getBirdSize();
+    let groundTopY=getGroundTopY();
+    let pipeW=getCurrentPipeWidth();
+    let pipeG=getCurrentPipeGap();
+    let perkSize=getPerkSize();
+    let s = getScale();
+    let dtSec = dt / 1000;
 
     if(activePerks.noCollisionTimeLeft>0){
-        activePerks.noCollisionTimeLeft-=dt/1000;
+        activePerks.noCollisionTimeLeft-=dtSec;
         if(activePerks.noCollisionTimeLeft<=0){
             activePerks.noCollisionTimeLeft=0;
         }
     }
 
     if(activePerks.fastForwardTimeLeft>0){
-        activePerks.fastForwardTimeLeft-=dt/1000;
+        activePerks.fastForwardTimeLeft-=dtSec;
         if(activePerks.fastForwardTimeLeft<=0){
             activePerks.fastForwardTimeLeft=0;
         }
@@ -34,12 +105,12 @@ function update(dt){
     bird.passThrough=(activePerks.noCollisionTimeLeft>0 || activePerks.fastForwardTimeLeft>0);
 
     if(gameState==='FALLING'){
-        bird.vy+=bird.gravity;
+        bird.vy+=bird.gravity*s;
         bird.y+=bird.vy;
         bird.rotation=Math.PI/2;
 
-        if(bird.y+24>=canvas.height - 112){
-            bird.y=canvas.height-112-24;
+        if(bird.y+birdSize.height / 2 >= groundTopY){
+            bird.y=groundTopY-birdSize.height / 2;
             gameState='GAMEOVER';
             music.die.play();
             messageBox.innerHTML = `
@@ -48,17 +119,18 @@ function update(dt){
                     <p style="font-size: 30px; text-shadow: 3px 3px 3px black;">Top score: <b>${bestScore!== undefined ? bestScore : 0}</b></p>
                     <p style="font-size: 25px; text-shadow: 3px 3px 3px black;">Score: <b>${currentScore}</b></p>
                     <button id="restartGameBtn" onclick="restartGame()">Try again</button>
+                     <p style="margin-top: 1; margin-bottom: -15px;">(or click / press Space)</p>
                 </section>`;
         }
         return;
     }
     if(gameState!=='PLAYING') return;
 
-    updatePhysics();
+    updatePhysics(dt);
     updateAnimation();
 
-    if(bird.y + 24 >=canvas.height - 112){
-        bird.y = canvas.height-112-24;
+    if(bird.y + birdSize.height / 2 >= groundTopY){
+        bird.y = groundTopY - birdSize.height / 2;
         gameState='GAMEOVER';
         music.hit.play();
         saveScore(currentScore);
@@ -73,32 +145,36 @@ function update(dt){
                     <p style="font-size: 30px; text-shadow: 3px 3px 3px black;">Top score: <b>${bestScore!== undefined ? bestScore : 0}</b></p>
                     <p style="font-size: 25px; text-shadow: 3px 3px 3px black;">Score: <b>${currentScore}</b></p>
                     <button id="restartGameBtn" onclick="restartGame()">Try again</button>
+                    <p style="margin-top: 1; margin-bottom: -15px;">(or click / press Space)</p>
                 </section>`;
     }
 
-    let currentPipeSpeed = (activePerks.fastForwardTimeLeft>0) ? 9 : 3;
+    let widthFactor=Math.max(0.8,Math.min(1.35,canvas.width/1200));
+    let baseSpeedPxPerSec=((activePerks.fastForwardTimeLeft>0) ? 630 : 210) * widthFactor;
     pipes.forEach(pipe => {
-        pipe.x -= currentPipeSpeed;
+        pipe.x -= baseSpeedPxPerSec*dtSec;
     });
 
-    pipes=pipes.filter(pipe => pipe.x+pipeWidth>0);
-    let nextPipeInterval=150;
+    pipes=pipes.filter(pipe => pipe.x+pipeW>0);
+
     frameCounter++;
     if(frameCounter >= nextPipeInterval){
         spawnPipe();
         frameCounter=0;
-        nextPipeInterval=Math.floor(Math.random() * (200-150+1) + 150);
+        nextPipeInterval=Math.floor(Math.random() * (150-75+1) + 75);
     }
     pipes.forEach(pipe =>{
-        let topPipeHitbox= {x: pipe.x, y: 0, width: pipeWidth, height: pipe.top};
-        let bottomPipeY = canvas.height - pipe.bottom;
-        let bottomPipeHitbox={x: pipe.x, y: bottomPipeY, width: pipeWidth, height: pipe.bottom};
-        let birdHitbox= {x: bird.x, y: bird.y, width: 34, height: 24};
+        let bottomPipeY = pipe.top+pipeG;
+        let bottomPipeHeight = Math.max(0,groundTopY-bottomPipeY);
+
+        let topPipeHitbox = {x: pipe.x, y: 0, width: pipeW, height: pipe.top};
+        let bottomPipeHitbox = {x: pipe.x, y: bottomPipeY, width: pipeW, height: bottomPipeHeight};
+        let birdHitbox = {x: bird.x - birdSize.width / 2, y: bird.y-birdSize.height / 2, width: birdSize.width, height: birdSize.height};
 
         if(pipe.perk && !pipe.perk.collected){
-            let perkX = pipe.x + pipeWidth / 2 - 20;
-            let perkY = pipe.top + pipeGap / 2 - 20;
-            let perkHitbox={x: perkX, y: perkY, width: 40, height: 40};
+            let perkX = pipe.x + pipeW / 2 - perkSize / 2;
+            let perkY = pipe.top + pipeG / 2 - perkSize / 2;
+            let perkHitbox={x: perkX, y: perkY, width: perkSize, height: perkSize};
 
             if(checkCollision(birdHitbox,perkHitbox)){
                 pipe.perk.collected=true;
@@ -108,7 +184,6 @@ function update(dt){
                     activePerks.noCollisionTimeLeft=pipe.perk.duration;
                 } else if(pipe.perk.type==='fastForward'){
                     activePerks.fastForwardTimeLeft=pipe.perk.duration;
-                    nextPipeInterval+=120;
                 } else if(pipe.perk.type==='superScore'){
                     currentScore+=10;
 
@@ -136,7 +211,7 @@ function update(dt){
             saveScore(currentScore);
         }
         else {
-            if(!pipe.passed && pipe.x + pipeWidth/2<= bird.x){
+            if(!pipe.passed && pipe.x + pipeW/2<= bird.x){
                 pipe.passed=true;
                 music.point.play();
                 currentScore++;
@@ -144,7 +219,7 @@ function update(dt){
                 if(bestScore!==undefined && bestScore>0 && currentScore > bestScore && !hasBeatenRecord){
                     hasBeatenRecord=true;
                     isSpinning=true;
-                    spinFramesLeft=40;
+                    spinTimeLeft=3.0;
 
                     if(messageTimeout){
                         clearTimeout(messageTimeout);
@@ -183,35 +258,45 @@ function getTopScores() {
 
 // Gameplay functions
 
-function updatePhysics(){
-    if(isSpinning) {
-        bird.rotation+=(Math.PI * 2) / 40;
-        spinFramesLeft--;
+function updatePhysics(dt){
+    let s = getScale();
+    let dtSec = dt / 1000;
+    if(isSpinning && spinTimeLeft > 0) {
+        spinTimeLeft-=dtSec;
+        bird.rotation+=((Math.PI * 4) / 3.0) * dtSec;
 
-        if(spinFramesLeft<=0){
+        if(spinTimeLeft<=0){
             isSpinning=false;
+            spinTimeLeft=0;
+            bird.rotation=0;
+        } 
+    } else {
+            bird.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 6, bird.vy * 0.05));
         }
-    }
-    bird.vy+=bird.gravity;
+    bird.vy+=bird.gravity * s;
     bird.y+=bird.vy;
-    bird.rotation=Math.min(Math.PI / 4, Math.max(-Math.PI / 6, bird.vy * 0.05));
 }
 
 function drawBird(ctx){
+    let birdSize=getBirdSize();
     ctx.save();
     ctx.translate(bird.x, bird.y);
     ctx.rotate(bird.rotation);
     let currentBirdImg = birdFrames[currentFrame];
-    ctx.drawImage(currentBirdImg, -17, -12, 34, 24);
+    if(currentBirdImg && currentBirdImg.complete && currentBirdImg.naturalWidth !==0){
+        ctx.drawImage(currentBirdImg, -birdSize.width / 2, -birdSize.height / 2, birdSize.width, birdSize.height);
+    }
 
     ctx.restore();
 }
 
 function spawnPipe() {
-    let minHeight = 50;
-    let groundHeight = 112;
-    let minBottomHeight=30;
-    let maxHeight = canvas.height - groundHeight - pipeGap - minBottomHeight;
+    let groundTopY = getGroundTopY();
+    let pipeG = getCurrentPipeGap();
+    let s = getScale();
+    let minHeight = Math.max(30,Math.round(50*s));
+    let minBottomHeight = Math.max(20,Math.round(30*s));
+    let maxHeight = Math.max(minHeight+10, groundTopY - pipeG- minBottomHeight);
     let topHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
 
     let perk = null;
@@ -237,7 +322,6 @@ function spawnPipe() {
     pipes.push({
         x: canvas.width,
         top: topHeight,
-        bottom: canvas.height - topHeight - pipeGap,
         passed: false,
         perk: perk
     });
@@ -257,18 +341,26 @@ function checkBirdCollision(rect1, rect2){
 }
 
 function restartGame(){
-    gameState='PLAYING';
-    currentScore=0;
-    pipes=[];
-    frameCounter=0;
-    nextPipeInterval=150;
-    bird.x=250;
-    bird.y=150;
+    gameState = 'PLAYING';
+    currentScore = 0;
+    pipes = [];
+    frameCounter = 0;
+    nextPipeInterval = 150;
+    bird.x = Math.min(250,Math.max(50,Math.round(canvas.width*0.2)));
+    bird.y = Math.round(getGroundTopY() * 0.25);
     bird.vy=0;
     bird.rotation=0;    
-    activePerks.noCollisionTimeLeft=0;
-    activePerks.fastForwardTimeLeft=0;
-    messageBox.innerHTML='';
+    hasBeatenRecord = false
+    isSpinning = false;
+    spinFramesLeft = 0;
+    spinTimeLeft=0;
+    activePerks.noCollisionTimeLeft = 0;
+    activePerks.fastForwardTimeLeft = 0;
+    if(messageTimeout) {
+        clearTimeout(messageTimeout);
+        messageTimeout = null;
+    }
+    messageBox.innerHTML = '';
 }
 
 // Audio-visual functions
@@ -282,22 +374,32 @@ function playMusic() {
 function draw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
+    let pipeW = getCurrentPipeWidth();
+    let pipeG = getCurrentPipeGap();
+    let perkSize = getPerkSize();
+    let groundTopY = getGroundTopY();
+    let s = getScale();
+
     pipes.forEach(pipe => {
-        ctx.save();
-        ctx.translate(pipe.x, pipe.top);
-        ctx.scale(1,-1);
-        ctx.drawImage(pipeImage,0,0,pipeWidth,pipe.top);
-        ctx.restore();
+        if(pipeImage && pipeImage.complete && pipeImage.naturalWidth!==0){
+            ctx.save();
+            ctx.translate(pipe.x, pipe.top);
+            ctx.scale(1,-1);
+            ctx.drawImage(pipeImage,0,0,pipeW,pipe.top);
+            ctx.restore();
 
-        let bottomPipeY = canvas.height-pipe.bottom;
-        ctx.drawImage(pipeImage,pipe.x,bottomPipeY,pipeWidth,pipe.bottom);
-
+            let bottomPipeY = pipe.top+pipeG;
+            let bottomPipeHeight = Math.max(0,groundTopY - bottomPipeY)
+            if (bottomPipeHeight>0) {
+                ctx.drawImage(pipeImage,pipe.x,bottomPipeY,pipeW,bottomPipeHeight);
+            }
+        }
         if(pipe.perk && !pipe.perk.collected){
-            let perkX = pipe.x + pipeWidth / 2 - 20;
-            let perkY = pipe.top + pipeGap / 2 - 20;
+            let perkX = pipe.x + pipeW / 2 - perkSize / 2;
+            let perkY = pipe.top + pipeG / 2 - perkSize / 2;
             let img = pipe.perk.perkImg;
             if(img && img.complete && img.naturalWidth!==0){
-                ctx.drawImage(pipe.perk.perkImg, perkX, perkY, 40, 40);
+                ctx.drawImage(img, perkX, perkY, perkSize, perkSize);
             }
         }
     })
@@ -305,37 +407,53 @@ function draw(){
     drawBird(ctx);
     drawScore(ctx,currentScore,canvas.width);
 
-    let timerY=80;
+    let timerY=Math.round(80*s + canvas.height * 0.05);
+    let fontSize = Math.max(14,Math.round(20*s));
+    let outlineWidth = Math.max(2,Math.round(fontSize*0.08));
+    
+    ctx.font = `bold ${fontSize}px Arial`;
+    ctx.strokeStyle='#000000';
+    ctx.lineWidth=outlineWidth;
+    ctx.lineJoin='round';
     if(activePerks.noCollisionTimeLeft > 0){
-        ctx.fillStyle='#0066ff';
-        ctx.font = 'bold 20px Arial';
-        ctx.fillText(`Immortality Perk Duration: ${activePerks.noCollisionTimeLeft.toFixed(1)}s`, 40, timerY);
-        timerY+=30;
+        let text=`Immortality Perk Duration: ${activePerks.noCollisionTimeLeft.toFixed(1)}s`;
+        ctx.strokeText(text,20,timerY);
+        ctx.fillStyle='#ff9900';
+        ctx.fillText(text,20,timerY);
+        timerY+=Math.round(30*s);
     }
     if(activePerks.fastForwardTimeLeft > 0){
+        let text=`Fast Forward Duration: ${activePerks.fastForwardTimeLeft.toFixed(1)}s`;
+        ctx.strokeText(text,20,timerY);
         ctx.fillStyle='#0066ff';
-        ctx.font = 'bold 20px Arial';
-        ctx.fillText(`Fast Forward Duration: ${activePerks.fastForwardTimeLeft.toFixed(1)}s`, 40, timerY);
+        ctx.fillText(text,20,timerY);
+        timerY+=Math.round(30*s);
     }
 
     if(gameState==='START'){
-        messageBox.innerHTML=`<img src="assets/UI/message.png">`;
+        messageBox.innerHTML=`
+            <img src="assets/UI/message.png">
+            <p>Press space or click to start</p>`;
     }
 }
 
 function drawScore(ctx,score,canvasWidth){
+    let s = getScale();
     let scoreStr=score.toString();
-    let digitWidth=24;
-    let digitHeight=36;
-    let spacing=2;
+    let digitWidth=Math.round(24*s);
+    let digitHeight=Math.round(36*s);
+    let spacing=Math.max(1,Math.round(2*s));
 
     let totalWidth = scoreStr.length*digitWidth+(scoreStr.length-1)*spacing;
-    let startX=canvasWidth-totalWidth-40;
-    let startY=40;
+    let startX=canvasWidth-totalWidth-Math.round(40*s);
+    let startY=Math.round(40*s);
 
     for(let i=0; i<scoreStr.length; i++){
         let digitValue=parseInt(scoreStr[i]);
-        ctx.drawImage(scoreNumbers[digitValue],startX,startY,digitWidth,digitHeight);
+        let numImg = scoreNumbers[digitValue];
+        if(numImg && numImg.complete && numImg.naturalWidth!==0) {
+            ctx.drawImage(numImg,startX,startY,digitWidth,digitHeight);
+        }
         startX+=digitWidth+spacing;
     }
 }
@@ -360,7 +478,7 @@ let bird= {
     x: 250,
     y: 150,
     vy: 0,
-    gravity: 0.35,
+    gravity: 0.3,
     lift: -10,
     rotation: 0,
     passThrough: false
@@ -387,8 +505,6 @@ let animCounter=0;
 // Wlasciwosci pipe 
 
 let pipes=[];
-let pipeWidth = 150;
-let pipeGap = 250;
 let pipeImage = new Image();
 pipeImage.src='assets/Flappy Bird/pipe-green.png';
 
@@ -402,7 +518,7 @@ let noCollisionPerk= {
 
 let fastForwardPerk= {
     duration: 1,
-    chance: 0.025,
+    chance: 0.05,
     perkImg: new Image()
 };
 
@@ -440,18 +556,21 @@ for (let i =0; i<=9; i++){
 
 // GRA
 const canvas = document.getElementById('gameCanvas');
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
 const ctx = canvas.getContext('2d');
 const messageBox=document.getElementById('messages');
 const restartBtn=document.getElementById("playAgainBtn");
 let gameState = 'START'; // START, PLAYING, FALLING, GAMEOVER
 let currentScore=0;
 let frameCounter=0;
+let nextPipeInterval=150;
 let hasBeatenRecord=false;
 let isSpinning=false;
 let spinFramesLeft=0;
+let spinTimeLeft=0;
 let messageTimeout=null;
+
+syncLayoutOnResize();
+window.addEventListener('resize', syncLayoutOnResize);
 
 requestAnimationFrame(gameLoop)
 window.addEventListener('keydown', (e) => {
@@ -465,5 +584,16 @@ window.addEventListener('keydown', (e) => {
         } else if (gameState === 'GAMEOVER') {
             restartGame();
         } 
+    }
+});
+window.addEventListener('click', () => {
+    if(gameState==='START'){
+        gameState='PLAYING';
+        messageBox.innerHTML = '';
+    } else if (gameState === 'PLAYING'){ 
+        bird.vy=bird.lift;
+         music.wing.play();
+     } else if (gameState === 'GAMEOVER') {
+         restartGame();
     }
 });
